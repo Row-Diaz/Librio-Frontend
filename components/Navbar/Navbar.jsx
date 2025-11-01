@@ -7,7 +7,7 @@ import "./Navbar.css";
 const CustomNavbar = () => {
   const { obtenerCantidadTotalCarrito } = useCart();
   const cantidadCarrito = obtenerCantidadTotalCarrito();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   const handleLogout = () => {
     setIsAuthenticated(false);
