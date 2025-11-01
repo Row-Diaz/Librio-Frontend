@@ -1,0 +1,191 @@
+/**
+ * ========================================
+ * ESTILOS DEL COMPONENTE REGISTRO USUARIO
+ * ========================================
+ * 
+ * Archivo de estilos para la página de registro de Librio.
+ * Mantiene consistencia visual con la página de inicio de sesión.
+ * Incluye estilos para formulario, campos y botones.
+ */
+
+/* ====== CONTENEDOR PRINCIPAL ====== */
+.registro-container {
+  min-height: 100vh;                    
+  background: transparent;              
+  color: white;                         
+  font-family: 'Arial', sans-serif;    
+}
+
+/* ====== CONTENIDO PRINCIPAL ====== */
+.registro-main {
+  padding-top: 100px;                  
+  padding-bottom: 2rem;               
+}
+
+/* ====== TARJETA DE REGISTRO ====== */
+.registro-card {
+  background:#4a1942; 
+  border: none;                        
+  border-radius: 15px;                 
+  backdrop-filter: blur(10px);         /* Efecto blur para profundidad */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); 
+}
+
+/* ====== LOGO EN REGISTRO ====== */
+.registro-logo {
+  width: 80px;                       
+  height: 80px;                
+  background:#EAEAEA; /* Gradiente morado */
+  border-radius: 50%;               
+  display: flex;                    
+  align-items: center;                
+  justify-content: center;          
+  margin: 0 auto;                     
+  overflow: hidden;                    /* Ocultar desborde */
+}
+
+/* Imagen del logo en la página de registro */
+.logo-image-large {
+  width: 70%;                         
+  height: 70%;                        
+  object-fit: contain;                 
+}
+
+/* ====== TÍTULO DE REGISTRO ====== */
+.registro-title {
+  font-size: 2rem;                    
+  font-weight: 300;                    
+  color: white;                        
+  font-style: italic;                 
+  margin-bottom: 2rem;                
+}
+
+/* ====== ETIQUETAS DEL FORMULARIO ====== */
+.registro-label {
+    display: flex;
+  color: white;                     
+  font-weight: 500;                 
+  margin-bottom: 0.5rem;             
+  font-size: 1rem;                    
+}
+
+/* ====== CAMPOS DE ENTRADA ====== */
+.registro-input {
+  background: rgba(255, 255, 255, 0.9); /* Fondo blanco semi-transparente */
+  border: 2px solid rgba(139, 90, 140, 0.3); 
+  border-radius: 8px;             
+  padding: 0.75rem 1rem;              
+  font-size: 1rem;                    
+  color: #333;                        
+  transition: all 0.3s ease;         
+}
+
+/* Estado focus de los campos */
+.registro-input:focus {
+  background: rgba(255, 255, 255, 1);  
+  border-color: #8b5a8c;             
+  box-shadow: 0 0 0 0.2rem rgba(139, 90, 140, 0.25); 
+  outline: none;                      
+}
+
+/* Placeholder de los campos */
+.registro-input::placeholder {
+  color: #999;                     
+  font-style: italic;                 
+}
+
+/* ====== BOTÓN DE REGISTRO ====== */
+.registro-button {
+  background:#eaeaea !important; /* Gradiente morado */
+  border: none !important; 
+  color:black !important;                                   
+  border-radius: 8px;                                           
+  padding: 1rem 2rem;                                              
+  font-size: 1.1rem;                                        
+  font-weight: 600;                                          
+  letter-spacing: 0.5px;                                     
+  transition: all 0.3s ease;                                   
+  box-shadow: 0 4px 15px rgba(139, 90, 140, 0.3);             
+}
+
+/* Estado hover del botón */
+.registro-button:hover {
+  background: linear-gradient(135deg, #a67ba6, #c299c2) !important; 
+  color: white !important;                                         
+  transform: translateY(-2px);                                    
+  box-shadow: 0 6px 20px rgba(139, 90, 140, 0.4);            
+}
+
+/* Estado activo del botón */
+.registro-button:active {
+  transform: translateY(0);             /* Volver a posición normal */
+}
+
+/* ====== TEXTO DE INICIO DE SESIÓN ====== */
+.login-text {
+  color: rgba(255, 255, 255, 0.8);     
+  margin: 0;                          
+  font-size: 0.95rem;                 
+}
+
+/* Link de inicio de sesión */
+.login-link {
+  color: #d4a5d4;                   
+  text-decoration: none;              
+  font-weight: 500;                   
+  transition: color 0.3s ease;        
+}
+
+/* Estado hover del link */
+.login-link:hover {
+  color: #e6c7e6;                     
+  text-decoration: underline;         
+}
+
+/* ====== DISEÑO RESPONSIVO ====== */
+/* Media query para tablets (768px y menores) */
+@media (max-width: 768px) {
+  .registro-main {
+    padding-top: 80px;                 /* Menos padding superior en tablets */
+  }
+
+  .registro-title {
+    font-size: 1.75rem;               /* Título más pequeño */
+  }
+
+  .registro-card .card-body {
+    padding: 2rem !important;          /* Menos padding en la tarjeta */
+  }
+
+  .registro-logo {
+    width: 70px;                       /* Logo más pequeño */
+    height: 70px;
+  }
+}
+
+/* Media query para móviles (480px y menores) */
+@media (max-width: 480px) {
+  .registro-main {
+    padding-top: 70px;                 /* Aún menos padding en móviles */
+    padding-left: 1rem;                /* Padding lateral */
+    padding-right: 1rem;               /* Padding lateral */
+  }
+
+  .registro-title {
+    font-size: 1.5rem;                /* Título más pequeño para móviles */
+  }
+
+  .registro-card .card-body {
+    padding: 1.5rem !important;        /* Padding mínimo */
+  }
+
+  .registro-button {
+    font-size: 1rem;                  /* Fuente del botón más pequeña */
+  }
+}
+
+/**
+ * ========================================
+ * FIN DE ESTILOS REGISTRO USUARIO
+ * ========================================
+ */

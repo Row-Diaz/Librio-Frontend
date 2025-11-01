@@ -1,0 +1,23 @@
+.footer {
+  background-color: #1a131a;
+  color: #a0a0a0;
+  padding: 2.5rem 0;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  max-width: none;
+}
+
+.footer-title {
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
+}
+
+.footer-text {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+  margin: 0;
+}

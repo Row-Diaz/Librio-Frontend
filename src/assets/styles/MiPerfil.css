@@ -1,0 +1,211 @@
+/**
+ * ========================================
+ * ESTILOS DEL COMPONENTE MI PERFIL
+ * ========================================
+ * 
+ * Archivo de estilos para la página de perfil de usuario de Librio.
+ * Mantiene consistencia visual con las demás páginas de la aplicación.
+ * Incluye estilos para foto de perfil, información personal y secciones.
+ */
+
+/* ====== CONTENEDOR PRINCIPAL ====== */
+.perfil-container {
+  min-height: 100vh;                    /* Altura mínima de viewport completo */
+  background: transparent;              /* Fondo transparente para mostrar imagen del body */
+  color: white;                         /* Texto blanco por defecto */
+  font-family: 'Arial', sans-serif;    /* Fuente principal consistente */
+}
+
+/* ====== CONTENIDO PRINCIPAL ====== */
+.perfil-main {
+  padding-top: 120px;                  /* Espacio para navbar fijo */
+  padding-bottom: 3rem;                /* Espacio inferior generoso */
+}
+
+/* ====== TARJETA DEL PERFIL ====== */
+.perfil-card {
+  background:#4a1942;   /* Fondo morado traslúcido - consistente */
+  border: none;                        /* Sin borde */
+  border-radius: 20px;                 /* Bordes redondeados más pronunciados */
+  backdrop-filter: blur(15px);         /* Efecto blur para profundidad */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4); /* Sombra elegante y profunda */
+}
+
+/* ====== IMAGEN DE PERFIL ====== */
+/* Contenedor principal de la imagen */
+.perfil-imagen-container {
+  display: flex;                       /* Flexbox para centrado */
+  justify-content: center;             /* Centrar horizontalmente */
+  margin-bottom: 2rem;                 /* Margen inferior */
+}
+
+/* Círculo contenedor de la imagen */
+.perfil-imagen {
+  width: 120px;                        /* Ancho del círculo */
+  height: 120px;                       /* Alto del círculo */
+  background: linear-gradient(135deg, #8b5a8c, #d4a5d4); /* Gradiente morado */
+  border-radius: 50%;                  /* Forma circular perfecta */
+  display: flex;                       /* Flexbox para centrar icono */
+  align-items: center;                 /* Centrado vertical */
+  justify-content: center;             /* Centrado horizontal */
+  border: 4px solid rgba(212, 165, 212, 0.3); /* Borde sutil */
+  box-shadow: 0 8px 25px rgba(139, 90, 140, 0.4); /* Sombra del círculo */
+}
+
+/* Icono de usuario dentro del círculo */
+.user-icon {
+  width: 60px;                         /* Ancho del icono */
+  height: 60px;                        /* Alto del icono */
+  color: white;                        /* Color blanco del icono */
+  opacity: 0.9;                        /* Ligera transparencia */
+}
+
+/* ====== INFORMACIÓN PERSONAL ====== */
+/* Nombre del usuario */
+.perfil-nombre {
+  font-size: 2.2rem;                   /* Tamaño de fuente grande */
+  font-weight: 300;                    /* Peso ligero y elegante */
+  color: white;                        /* Color blanco */
+  font-style: italic;                  /* Texto en cursiva */
+  margin-bottom: 0.5rem;              /* Margen inferior pequeño */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra de texto */
+}
+
+/* Email del usuario */
+.perfil-email {
+  font-size: 1.1rem;                   /* Tamaño medio */
+  color: rgba(212, 165, 212, 0.9);     /* Color morado claro */
+  margin-bottom: 0;                    /* Sin margen inferior */
+  font-weight: 400;                    /* Peso normal */
+}
+
+/* ====== SECCIONES DE CONTENIDO ====== */
+/* Títulos de las secciones */
+.seccion-titulo {
+  font-size: 1.3rem;                   /* Tamaño de fuente medio-grande */
+  font-weight: 500;                    /* Peso medio */
+  color: white;                        /* Color blanco */
+  margin-bottom: 1rem;                 /* Margen inferior */
+  text-align: center;                  /* Centrado en móviles */
+}
+
+/* ====== SECCIÓN CARGAR IMAGEN ====== */
+/* Contenedor de la sección */
+.cargar-imagen-section {
+  text-align: center;                  /* Centrar contenido */
+}
+
+/* Botón de cargar imagen */
+.cargar-imagen-btn {
+  background: rgba(255, 255, 255, 0.9) !important; /* Fondo blanco semi-transparente */
+  border: 2px solid rgba(139, 90, 140, 0.3) !important; /* Borde morado sutil */
+  color: #333 !important;              /* Texto oscuro */
+  padding: 0.8rem 1.5rem;             /* Padding generoso */
+  border-radius: 12px;                 /* Bordes redondeados */
+  font-weight: 500;                    /* Peso medio */
+  transition: all 0.3s ease;          /* Transición suave */
+  display: flex;                       /* Flexbox para alinear icono y texto */
+  align-items: center;                 /* Centrado vertical */
+  justify-content: center;             /* Centrado horizontal */
+  gap: 0.5rem;                         /* Espacio entre icono y texto */
+  width: 100%;                         /* Ancho completo en su contenedor */
+  max-width: 200px;                    /* Ancho máximo */
+  margin: 0 auto;                      /* Centrar horizontalmente */
+}
+
+/* Estado hover del botón */
+.cargar-imagen-btn:hover {
+  background: linear-gradient(135deg, #8b5a8c, #a67ba6) !important; /* Gradiente morado */
+  color: white !important;             /* Texto blanco */
+  border-color: #8b5a8c !important;   /* Borde morado */
+  transform: translateY(-2px);        /* Efecto de elevación */
+  box-shadow: 0 6px 20px rgba(139, 90, 140, 0.4); /* Sombra más intensa */
+}
+
+/* Icono de subida */
+.upload-icon {
+  width: 20px;                         /* Ancho del icono */
+  height: 20px;                        /* Alto del icono */
+}
+
+/* ====== SECCIÓN SOBRE MÍ ====== */
+/* Contenedor de la sección */
+.sobre-mi-section {
+  text-align: center;                  /* Centrar en móviles */
+}
+
+/* Texto de descripción */
+.descripcion-texto {
+  font-size: 0.95rem;                  /* Tamaño de fuente ligeramente menor */
+  line-height: 1.6;                    /* Altura de línea para legibilidad */
+  color: rgba(255, 255, 255, 0.85);    /* Blanco semi-transparente */
+  margin-bottom: 0;                    /* Sin margen inferior */
+  text-align: justify;                 /* Texto justificado para mejor legibilidad */
+}
+
+/* ====== DISEÑO RESPONSIVO ====== */
+/* Media query para tablets (768px y menores) */
+@media (max-width: 768px) {
+  .perfil-main {
+    padding-top: 100px;                /* Menos padding superior */
+    padding-left: 1rem;                /* Padding lateral */
+    padding-right: 1rem;               /* Padding lateral */
+  }
+
+  .perfil-card .card-body {
+    padding: 2rem !important;           /* Menos padding en la tarjeta */
+  }
+
+  .perfil-imagen {
+    width: 100px;                      /* Imagen más pequeña */
+    height: 100px;
+  }
+
+  .user-icon {
+    width: 50px;                       /* Icono más pequeño */
+    height: 50px;
+  }
+
+  .perfil-nombre {
+    font-size: 1.8rem;                 /* Nombre más pequeño */
+  }
+
+  .seccion-titulo {
+    text-align: center;                /* Mantener centrado */
+  }
+
+  .sobre-mi-section {
+    margin-top: 2rem;                  /* Espacio superior en móviles */
+  }
+}
+
+/* Media query para móviles (480px y menores) */
+@media (max-width: 480px) {
+  .perfil-main {
+    padding-top: 90px;                 /* Aún menos padding */
+  }
+
+  .perfil-card .card-body {
+    padding: 1.5rem !important;        /* Padding mínimo */
+  }
+
+  .perfil-nombre {
+    font-size: 1.6rem;                 /* Nombre más pequeño para móviles */
+  }
+
+  .descripcion-texto {
+    font-size: 0.9rem;                 /* Texto más pequeño */
+    text-align: center;                /* Centrado en móviles pequeños */
+  }
+
+  .cargar-imagen-btn {
+    font-size: 0.9rem;                 /* Texto del botón más pequeño */
+    padding: 0.7rem 1.2rem;           /* Padding reducido */
+  }
+}
+
+/**
+ * ========================================
+ * FIN DE ESTILOS MI PERFIL
+ * ========================================
+ */

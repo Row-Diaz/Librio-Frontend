@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "titulo": "Rosas Rojas",
+    "precio": 200,
+    "urlImagen": "https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "2",
+    "titulo": "Hojas Verdes",
+    "precio": 200,
+    "urlImagen": "https://tse3.mm.bing.net/th/id/OIP.y9V-0lb89Y0vpMYmhuPASQHaE8?rs=1&pid=ImgDetMain&o=7&rm=3"
+  },
+  {
+    "id": "3",
+    "titulo": "Luz de Tarde",
+    "precio": 200,
+    "urlImagen": "https://live.staticflickr.com/65535/50992928532_f75653d9f7_b.jpg"
+  },
+  {
+    "id": "4",
+    "titulo": "Manos Sabias",
+    "precio": 200,
+    "urlImagen": "https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "5",
+    "titulo": "Lectura Diaria",
+    "precio": 200,
+    "urlImagen": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "6",
+    "titulo": "Corazón de Papel",
+    "precio": 200,
+    "urlImagen": "https://tse1.mm.bing.net/th/id/OIP.-qarU6Tqtm3Bmgcq6c_sxwHaD4?rs=1&pid=ImgDetMain&o=7&rm=3"
+  }
+]

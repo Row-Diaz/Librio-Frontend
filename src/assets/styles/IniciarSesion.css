@@ -1,0 +1,190 @@
+/**
+ * ========================================
+ * ESTILOS DEL COMPONENTE INICIAR SESIÓN
+ * ========================================
+ * 
+ * Archivo de estilos para la página de login de Librio.
+ * Incluye estilos para formulario, campos y botones.
+ * Mantiene consistencia con el diseño general de la aplicación.
+ */
+
+/* ====== CONTENEDOR PRINCIPAL ====== */
+.login-container {
+  min-height: 100vh;                    /* Altura mínima de viewport completo */
+  background: transparent;              /* Fondo transparente para mostrar la imagen del body */
+  color: white;                         /* Texto blanco por defecto */
+  font-family: 'Arial', sans-serif;    /* Fuente principal consistente */
+}
+
+/* ====== CONTENIDO PRINCIPAL ====== */
+.login-main {
+  padding-top: 100px;                  /* Espacio para navbar fijo */
+  padding-bottom: 2rem;                /* Espacio inferior */
+}
+
+/* ====== TARJETA DE LOGIN ====== */
+.login-card {
+  background:#4a1942;   /* Fondo morado traslúcido */
+  border: none;                        /* Sin borde */
+  border-radius: 15px;                 /* Bordes redondeados */
+  backdrop-filter: blur(10px);         /* Efecto blur para profundidad */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Sombra elegante */
+}
+
+/* ====== LOGO EN LOGIN ====== */
+.login-logo {
+  width: 80px;                         /* Ancho del contenedor del logo */
+  height: 80px;                        /* Alto del contenedor del logo */
+  background: white; /* Gradiente morado */
+  border-radius: 50%;                  /* Forma circular */
+  display: flex;                       /* Flexbox para centrado */
+  align-items: center;                 /* Centrado vertical */
+  justify-content: center;             /* Centrado horizontal */
+  margin: 0 auto;                      /* Centrar horizontalmente */
+  overflow: hidden;                    /* Ocultar desborde */
+}
+
+/* Imagen del logo en la página de login */
+.logo-image-large {
+  width: 100%;                          /* Tamaño de la imagen dentro del círculo */
+  height: 100%;                         /* Altura proporcional */
+  object-fit: contain;                 /* Mantener proporciones */
+}
+
+/* ====== TÍTULO DE LOGIN ====== */
+.login-title {
+  font-size: 2rem;                     /* Tamaño de fuente grande */
+  font-weight: 300;                    /* Peso ligero */
+  color: white;                        /* Color blanco */
+  font-style: italic;                  /* Texto en cursiva */
+  margin-bottom: 2rem;                 /* Margen inferior */
+}
+
+/* ====== ETIQUETAS DEL FORMULARIO ====== */
+.login-label {
+  display: flex;
+  color: white;                        /* Color blanco para las etiquetas */
+  font-weight: 500;                    /* Peso medio */
+  margin-bottom: 0.5rem;              /* Margen inferior */
+  font-size: 1rem;                     /* Tamaño de fuente normal */
+}
+
+/* ====== CAMPOS DE ENTRADA ====== */
+.login-input {
+  background: rgba(255, 255, 255, 0.9); /* Fondo blanco semi-transparente */
+  border: 2px solid rgba(139, 90, 140, 0.3); /* Borde morado sutil */
+  border-radius: 8px;                  /* Bordes redondeados */
+  padding: 0.75rem 1rem;              /* Padding generoso */
+  font-size: 1rem;                    /* Tamaño de fuente */
+  color: #333;                         /* Color del texto */
+  transition: all 0.3s ease;          /* Transición suave */
+}
+
+/* Estado focus de los campos */
+.login-input:focus {
+  background: rgba(255, 255, 255, 1);  /* Fondo completamente blanco al enfocar */
+  border-color: #8b5a8c;               /* Borde morado al enfocar */
+  box-shadow: 0 0 0 0.2rem rgba(139, 90, 140, 0.25); /* Sombra de enfoque */
+  outline: none;                       /* Sin outline por defecto */
+}
+
+/* Placeholder de los campos */
+.login-input::placeholder {
+  color: #999;                         /* Color gris para placeholder */
+  font-style: italic;                  /* Texto en cursiva */
+}
+
+/* ====== BOTÓN DE LOGIN ====== */
+.login-button {
+  background: #eaeaea !important;
+  color: black;
+  border: none !important;                                          /* Sin borde */
+  border-radius: 8px;                                              /* Bordes redondeados */
+  padding: 1rem 2rem;                                              /* Padding generoso */
+  font-size: 1.1rem;                                               /* Fuente ligeramente mayor */
+  font-weight: 600;                                                /* Peso semi-bold */
+  letter-spacing: 0.5px;                                           /* Espaciado entre letras */
+  transition: all 0.3s ease;                                       /* Transición suave */
+  box-shadow: 0 4px 15px rgba(139, 90, 140, 0.3);                /* Sombra */
+}
+
+/* Estado hover del botón */
+.login-button:hover {
+  background: linear-gradient(135deg, #a67ba6, #c299c2) !important; /* Gradiente más claro */
+  transform: translateY(-2px);                                      /* Efecto de elevación */
+  box-shadow: 0 6px 20px rgba(139, 90, 140, 0.4);                 /* Sombra más intensa */
+}
+
+/* Estado activo del botón */
+.login-button:active {
+  transform: translateY(0);             /* Volver a posición normal */
+}
+
+/* ====== TEXTO DE REGISTRO ====== */
+.register-text {
+  color: rgba(255, 255, 255, 0.8);     
+  margin: 0;                          
+  font-size: 0.95rem;               
+}
+
+/* Link de registro */
+.register-link {
+  color: #d4a5d4;                      
+  text-decoration: none;              
+  font-weight: 500;                   
+  transition: color 0.3s ease;      
+}
+
+/* Estado hover del link */
+.register-link:hover {
+  color: #e6c7e6;                   
+  text-decoration: underline;         
+}
+
+/* ====== DISEÑO RESPONSIVO ====== */
+/* Media query para tablets (768px y menores) */
+@media (max-width: 768px) {
+  .login-main {
+    padding-top: 80px;                 /* Menos padding superior en tablets */
+  }
+
+  .login-title {
+    font-size: 1.75rem;               /* Título más pequeño */
+  }
+
+  .login-card .card-body {
+    padding: 2rem !important;          /* Menos padding en la tarjeta */
+  }
+
+  .login-logo {
+    width: 70px;                       /* Logo más pequeño */
+    height: 70px;
+  }
+}
+
+/* Media query para móviles (480px y menores) */
+@media (max-width: 480px) {
+  .login-main {
+    padding-top: 70px;                 /* Aún menos padding en móviles */
+    padding-left: 1rem;                /* Padding lateral */
+    padding-right: 1rem;               /* Padding lateral */
+  }
+
+  .login-title {
+    font-size: 1.5rem;                /* Título más pequeño para móviles */
+  }
+
+  .login-card .card-body {
+    padding: 1.5rem !important;        /* Padding mínimo */
+  }
+
+  .login-button {
+    font-size: 1rem;                  /* Fuente del botón más pequeña */
+  }
+}
+
+/**
+ * ========================================
+ * FIN DE ESTILOS INICIAR SESIÓN
+ * ========================================
+ */
