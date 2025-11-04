@@ -1,11 +1,13 @@
+// Vista para publicar (vender) un libro nuevo
 import React, { useState } from "react";
-import { Container, Form, Button, Card, Alert, Spinner } from "react-bootstrap";
-import { useLibros } from "../context/LibrosContext";
-import "../assets/styles/Publicar.css";
+import { Container, Form, Button, Card, Alert, Spinner } from "react-bootstrap"; // UI
+import { useLibros } from "../context/LibrosContext"; // Acción agregarLibro y estados
+import "../assets/styles/Publicar.css"; // Estilos
 
 const Publicar = () => {
   const { agregarLibro, isLoading } = useLibros();
 
+  // Estado controlado del formulario del libro a publicar
   const [libroData, setLibroData] = useState({
     titulo: "",
     autor: "",
@@ -16,15 +18,17 @@ const Publicar = () => {
     precio: "",
     urlImagen: "",
   });
-  const [errors, setErrors] = useState({});
-  const [mensaje, setMensaje] = useState(null);
+  const [errors, setErrors] = useState({}); // Errores por campo
+  const [mensaje, setMensaje] = useState(null); // Mensaje de resultado
 
+  // Actualiza el campo editado y limpia su error si existía
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setLibroData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: null }));
   };
 
+  // Validaciones básicas de negocio para publicar
   const validateForm = () => {
     const newErrors = {};
     if (!libroData.titulo.trim())
@@ -41,6 +45,7 @@ const Publicar = () => {
     return newErrors;
   };
 
+  // Envío del formulario: normaliza tipos y llama a agregarLibro
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensaje(null);

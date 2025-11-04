@@ -1,12 +1,17 @@
+// Importaciones principales de React y librerías de UI/ruteo
 import React, { useState } from "react";
-import { Container, Navbar, Nav, Badge } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { useCart } from "../../src/context/CartContext";
-import "./Navbar.css";
+import { Container, Navbar, Nav, Badge } from "react-bootstrap"; // Componentes de Bootstrap para construir la barra de navegación
+import { Link } from "react-router-dom"; // Navegación interna entre rutas
+import { useCart } from "../../src/context/CartContext"; // Hook del contexto de carrito para leer cantidad de items
+import "./Navbar.css"; // Estilos específicos de la barra de navegación
 
+// Componente de barra de navegación principal del sitio
 const CustomNavbar = () => {
+  // Extraemos del contexto la función que calcula la cantidad de productos en el carrito
   const { obtenerCantidadTotalCarrito } = useCart();
+  // Cantidad total de ítems en carrito (se actualiza cuando cambia el contexto)
   const cantidadCarrito = obtenerCantidadTotalCarrito();
+  // Estado local para simular si el usuario está autenticado
   const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   const handleLogout = () => {

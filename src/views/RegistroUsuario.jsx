@@ -1,17 +1,20 @@
+// Vista de registro: controla formulario, valida y simula envío
 import React, { useState } from "react";
-import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import "../assets/styles/RegistroUsuario.css";
+import { Container, Row, Col, Form, Button, Card } from "react-bootstrap"; // UI
+import { Link } from "react-router-dom"; // Navegación
+import "../assets/styles/RegistroUsuario.css"; // Estilos
 
 const RegistroUsuario = () => {
+  // Estado controlado del formulario de registro
   const [formData, setFormData] = useState({
     nombreCompleto: "",
     email: "",
     password: "",
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({}); // Errores por campo
 
+  // Actualiza el campo editado y limpia su error si existía
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -27,6 +30,7 @@ const RegistroUsuario = () => {
     }
   };
 
+  // Validación básica de campos (nombre, email con regex y longitud mínima de password)
   const validateForm = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -50,6 +54,7 @@ const RegistroUsuario = () => {
     return newErrors;
   };
 
+  // Envía el formulario si es válido (aquí sólo se loggea como demostración)
   const handleSubmit = (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
