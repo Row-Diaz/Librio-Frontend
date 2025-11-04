@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useEffect,
 } from "react";
+import { librosService } from "../services/librosService";
 import librosData from "../views/libros.json";
 
 const LibrosContext = createContext();
@@ -23,34 +24,96 @@ export const LibrosProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setIsLoading(true);
-    try {
-      setLibros(librosData);
-    } catch (e) {
-      console.error("Error al cargar datos iniciales:", e);
-      setError("No se pudieron cargar los libros.");
-    } finally {
-      setTimeout(() => setIsLoading(false), 500);
-    }
+    cargarLibros();
   }, []);
+
+  const cargarLibros = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const result = await librosService.getAllLibros();
+      
+      if (result.success) {
+        // Normalizar datos del backend al formato del frontend
+        const librosNormalizados = result.libros.map(libro => 
+          librosService.normalizeLibroFromBackend(libro)
+        );
+        setLibros(librosNormalizados);
+      } else {
+        throw new Error(result.error || "No se pudieron cargar los libros.");
+      }
+    } catch (error) {
+      console.warn("⚠️ Backend no disponible, usando datos locales:", error.message);
+      // Fallback: usar datos locales del JSON
+      setLibros(librosData);
+      setError(null); // No mostrar error al usuario, solo usar fallback
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const agregarLibro = useCallback(async (nuevoLibroData) => {
     setIsLoading(true);
     setError(null);
+    
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const result = await librosService.createLibro(nuevoLibroData);
+      
+      if (result.success) {
+        // Normalizar y agregar el nuevo libro al estado
+        const libroNormalizado = librosService.normalizeLibroFromBackend(result.libro);
+        setLibros((prevLibros) => [libroNormalizado, ...prevLibros]);
+        return true;
+      } else {
+        setError(result.error || "No se pudo publicar el libro.");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error al agregar libro:", error);
+      setError("Error de conexión al publicar el libro.");
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-      const nuevoLibro = {
-        id: Date.now().toString(),
-        ...nuevoLibroData,
-        fechaPublicacion: new Date().toISOString(),
-      };
+  // Obtener libro por ID
+  const obtenerLibroPorId = useCallback(async (id) => {
+    try {
+      const result = await librosService.getLibroById(id);
+      
+      if (result.success) {
+        return librosService.normalizeLibroFromBackend(result.libro);
+      } else {
+        setError(result.error);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error al obtener libro:", error);
+      setError("Error al obtener detalles del libro.");
+      return null;
+    }
+  }, []);
 
-      setLibros((prevLibros) => [nuevoLibro, ...prevLibros]);
-      return true;
-    } catch (e) {
-      console.error("Error al agregar libro:", e);
-      setError("No se pudo publicar el libro. Inténtalo de nuevo.");
+  // Eliminar libro (solo admin)
+  const eliminarLibro = useCallback(async (id) => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const result = await librosService.deleteLibro(id);
+      
+      if (result.success) {
+        setLibros((prevLibros) => prevLibros.filter(libro => libro.id !== id));
+        return true;
+      } else {
+        setError(result.error || "No se pudo eliminar el libro.");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error al eliminar libro:", error);
+      setError("Error de conexión al eliminar el libro.");
       return false;
     } finally {
       setIsLoading(false);
@@ -62,6 +125,9 @@ export const LibrosProvider = ({ children }) => {
     isLoading,
     error,
     agregarLibro,
+    obtenerLibroPorId,
+    eliminarLibro,
+    cargarLibros, // Para recargar desde componentes
   };
 
   return (

@@ -7,11 +7,16 @@ import {
   Button,
   Card,
   Alert,
+  Spinner
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../assets/styles/IniciarSesion.css";
 
 const IniciarSesion = () => {
+  const navigate = useNavigate();
+  const { login, isLoading, error } = useAuth();
+  
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -46,7 +51,7 @@ const IniciarSesion = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setMensajeError("");
 
@@ -56,7 +61,19 @@ const IniciarSesion = () => {
       return;
     }
 
-    console.log("Formulario válido, intentando iniciar sesión con:", formData);
+    try {
+      const result = await login(formData);
+      
+      if (result.success) {
+        // Redirigir a la página principal
+        navigate('/');
+      } else {
+        setMensajeError(result.error || "Error al iniciar sesión");
+      }
+    } catch (error) {
+      console.error("Error en login:", error);
+      setMensajeError("Error inesperado al iniciar sesión");
+    }
   };
 
   return (
@@ -81,8 +98,8 @@ const IniciarSesion = () => {
                     Iniciar Sesión
                   </h2>
 
-                  {mensajeError && (
-                    <Alert variant="danger">{mensajeError}</Alert>
+                  {(mensajeError || error) && (
+                    <Alert variant="danger">{mensajeError || error}</Alert>
                   )}
 
                   <Form noValidate onSubmit={handleSubmit}>
@@ -119,8 +136,27 @@ const IniciarSesion = () => {
                     </Form.Group>
 
                     <div className="d-grid mb-4">
-                      <Button type="submit" className="login-button" size="lg">
-                        Iniciar Sesión
+                      <Button 
+                        type="submit" 
+                        className="login-button" 
+                        size="lg"
+                        disabled={isLoading}
+                      >
+                        {isLoading ? (
+                          <>
+                            <Spinner
+                              as="span"
+                              animation="border"
+                              size="sm"
+                              role="status"
+                              aria-hidden="true"
+                              className="me-2"
+                            />
+                            Iniciando sesión...
+                          </>
+                        ) : (
+                          'Iniciar Sesión'
+                        )}
                       </Button>
                     </div>
 

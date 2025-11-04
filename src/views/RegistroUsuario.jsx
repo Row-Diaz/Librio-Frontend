@@ -1,10 +1,14 @@
-// Vista de registro: controla formulario, valida y simula envío
+// Vista de registro: controla formulario, valida y registra usuarios
 import React, { useState } from "react";
-import { Container, Row, Col, Form, Button, Card } from "react-bootstrap"; // UI
-import { Link } from "react-router-dom"; // Navegación
+import { Container, Row, Col, Form, Button, Card, Alert, Spinner } from "react-bootstrap"; // UI
+import { Link, useNavigate } from "react-router-dom"; // Navegación
+import { useAuth } from "../context/AuthContext"; // Auth context
 import "../assets/styles/RegistroUsuario.css"; // Estilos
 
 const RegistroUsuario = () => {
+  const navigate = useNavigate();
+  const { register, isLoading, error } = useAuth();
+  
   // Estado controlado del formulario de registro
   const [formData, setFormData] = useState({
     nombreCompleto: "",
@@ -13,6 +17,8 @@ const RegistroUsuario = () => {
   });
 
   const [errors, setErrors] = useState({}); // Errores por campo
+  const [mensaje, setMensaje] = useState(""); // Mensajes de éxito/error
+  const [variant, setVariant] = useState("success"); // Tipo de alerta
 
   // Actualiza el campo editado y limpia su error si existía
   const handleChange = (e) => {
@@ -54,17 +60,56 @@ const RegistroUsuario = () => {
     return newErrors;
   };
 
-  // Envía el formulario si es válido (aquí sólo se loggea como demostración)
-  const handleSubmit = (e) => {
+  // Envía el formulario al backend
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setMensaje("");
+    
     const validationErrors = validateForm();
-
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
-    console.log("Formulario válido, enviando datos:", formData);
+    try {
+      // Separar nombre y apellido del nombreCompleto
+      const nombreParts = formData.nombreCompleto.trim().split(' ');
+      const nombre = nombreParts[0];
+      const apellido = nombreParts.slice(1).join(' ') || nombre; // Si no hay apellido, usar nombre
+      
+      const userData = {
+        nombre,
+        apellido,
+        email: formData.email,
+        password: formData.password
+      };
+      
+      const result = await register(userData);
+      
+      if (result.success) {
+        setVariant("success");
+        setMensaje("¡Registro exitoso! Ahora puedes iniciar sesión.");
+        
+        // Limpiar formulario
+        setFormData({
+          nombreCompleto: "",
+          email: "",
+          password: "",
+        });
+        
+        // Redirigir al login después de 2 segundos
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      } else {
+        setVariant("danger");
+        setMensaje(result.error || "Error al registrar usuario");
+      }
+    } catch (error) {
+      console.error("Error en registro:", error);
+      setVariant("danger");
+      setMensaje("Error inesperado al registrar usuario");
+    }
   };
 
   return (
@@ -88,6 +133,11 @@ const RegistroUsuario = () => {
                   <h2 className="registro-title text-center mb-4">
                     Regístrate
                   </h2>
+
+                  {(mensaje || error) && (
+                    <Alert variant={variant}>{mensaje || error}</Alert>
+                  )}
+
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group className="mb-3">
                       <Form.Label className="registro-label">
@@ -143,8 +193,23 @@ const RegistroUsuario = () => {
                         type="submit"
                         className="registro-button"
                         size="lg"
+                        disabled={isLoading}
                       >
-                        Registrarse
+                        {isLoading ? (
+                          <>
+                            <Spinner
+                              as="span"
+                              animation="border"
+                              size="sm"
+                              role="status"
+                              aria-hidden="true"
+                              className="me-2"
+                            />
+                            Registrando...
+                          </>
+                        ) : (
+                          'Registrarse'
+                        )}
                       </Button>
                     </div>
 

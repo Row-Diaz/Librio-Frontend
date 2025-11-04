@@ -9,6 +9,7 @@ import RegistroUsuario from "./views/RegistroUsuario.jsx";
 import Carrito from "./views/Carrito.jsx";
 import { LibrosProvider } from "./context/LibrosContext";
 import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
 import CustomNavbar from "../components/Navbar/Navbar.jsx";
 import Footer from "../components/Footer/Footer.jsx";
 
@@ -16,9 +17,10 @@ import "./App.css";
 
 function App() {
   return (
-    <LibrosProvider>
-      <CartProvider>
-        <Router>
+    <AuthProvider>
+      <LibrosProvider>
+        <CartProvider>
+          <Router>
           <div className="app-container">
             <CustomNavbar />
 
@@ -43,8 +45,9 @@ function App() {
             <Footer />
           </div>
         </Router>
-      </CartProvider>
-    </LibrosProvider>
+        </CartProvider>
+      </LibrosProvider>
+    </AuthProvider>
   );
 }
 

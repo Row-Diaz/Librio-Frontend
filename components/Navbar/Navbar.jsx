@@ -12,7 +12,7 @@ const CustomNavbar = () => {
   // Cantidad total de ítems en carrito (se actualiza cuando cambia el contexto)
   const cantidadCarrito = obtenerCantidadTotalCarrito();
   // Estado local para simular si el usuario está autenticado
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleLogout = () => {
     setIsAuthenticated(false);
