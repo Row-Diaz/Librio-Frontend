@@ -35,7 +35,6 @@ const MiPerfil = () => {
    * TODO: Implementar funcionalidad de carga de imagen
    */
   const handleImageUpload = () => {
-    console.log('Funcionalidad de carga de imagen por implementar');
     // TODO: Abrir selector de archivos
     // TODO: Validar formato de imagen
     // TODO: Subir imagen al servidor

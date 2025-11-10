@@ -35,7 +35,6 @@ const Carrito = () => {
       setMessageVariant("success");
       clearCart();
     } catch (error) {
-      console.error("Error during checkout:", error);
       setCheckoutMessage("Error de red o el servidor no está disponible.");
       setMessageVariant("danger");
     }

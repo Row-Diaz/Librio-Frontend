@@ -106,7 +106,6 @@ const RegistroUsuario = () => {
         setMensaje(result.error || "Error al registrar usuario");
       }
     } catch (error) {
-      console.error("Error en registro:", error);
       setVariant("danger");
       setMensaje("Error inesperado al registrar usuario");
     }

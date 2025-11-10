@@ -31,7 +31,7 @@ export const librosService = {
         titulo: libroData.titulo,
         autor: libroData.autor,
         editorial: libroData.editorial,
-        anio_publicacion: parseInt(libroData.año), // año -> anio_publicacion
+        anio_publicacion: String(libroData.año).substring(0, 4), // Asegurar 4 caracteres
         genero: libroData.genero,
         descripcion: libroData.descripcion,
         precio: parseFloat(libroData.precio),
@@ -41,7 +41,7 @@ export const librosService = {
       const response = await api.post('/libros', backendData);
       return { success: true, libro: response.data };
     } catch (error) {
-      const message = error.response?.data?.message || 'Error al crear el libro';
+      const message = error.response?.data?.error || error.response?.data?.message || 'Error al crear el libro';
       return { success: false, error: message };
     }
   },

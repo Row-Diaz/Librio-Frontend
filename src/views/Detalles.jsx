@@ -16,7 +16,9 @@ const Detalles = () => {
 
   useEffect(() => {
     if (libros.length > 0) {
-      const libroEncontrado = libros.find((item) => item.id === id);
+      // Convertir ambos IDs a string para comparación
+      const libroEncontrado = libros.find((item) => String(item.id) === String(id));
+      
       if (libroEncontrado) {
         setLibro(libroEncontrado);
       } else {

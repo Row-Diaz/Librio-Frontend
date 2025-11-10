@@ -17,11 +17,7 @@ api.interceptors.request.use(
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('📤 Request con token JWT');
-    } else {
-      console.log('📤 Request sin autenticación');
     }
-    console.log(`📤 ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
     return config;
   },
   (error) => {

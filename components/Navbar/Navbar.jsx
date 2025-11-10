@@ -1,22 +1,25 @@
 // Importaciones principales de React y librerías de UI/ruteo
-import React, { useState } from "react";
+import React from "react";
 import { Container, Navbar, Nav, Badge } from "react-bootstrap"; // Componentes de Bootstrap para construir la barra de navegación
-import { Link } from "react-router-dom"; // Navegación interna entre rutas
+import { Link, useNavigate } from "react-router-dom"; // Navegación interna entre rutas
 import { useCart } from "../../src/context/CartContext"; // Hook del contexto de carrito para leer cantidad de items
+import { useAuth } from "../../src/context/AuthContext"; // Hook del contexto de autenticación
 import "./Navbar.css"; // Estilos específicos de la barra de navegación
 
 // Componente de barra de navegación principal del sitio
 const CustomNavbar = () => {
+  const navigate = useNavigate();
   // Extraemos del contexto la función que calcula la cantidad de productos en el carrito
   const { obtenerCantidadTotalCarrito } = useCart();
   // Cantidad total de ítems en carrito (se actualiza cuando cambia el contexto)
   const cantidadCarrito = obtenerCantidadTotalCarrito();
-  // Estado local para simular si el usuario está autenticado
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Obtener estado de autenticación y usuario del contexto
+  const { isAuthenticated, user, logout, isAdmin } = useAuth();
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    console.log("Cerrando sesión...");
+    logout();
+    navigate('/');
+    console.log("Sesión cerrada exitosamente");
   };
 
   return (
@@ -44,9 +47,14 @@ const CustomNavbar = () => {
                 <Nav.Link as={Link} to="/galeria" className="custom-nav-link">
                   Galería
                 </Nav.Link>
-                <Nav.Link as={Link} to="/publicar" className="custom-nav-link">
-                  Publicar
-                </Nav.Link>
+                
+                {/* Opción de Publicar solo visible para administradores */}
+                {isAdmin() && (
+                  <Nav.Link as={Link} to="/publicar" className="custom-nav-link">
+                    Publicar
+                  </Nav.Link>
+                )}
+                
                 <Nav.Link
                   as={Link}
                   to="/carrito"
@@ -59,26 +67,28 @@ const CustomNavbar = () => {
                     </Badge>
                   )}
                 </Nav.Link>
-                <Nav.Link
-                  as={Link}
-                  to="/"
-                  className="custom-nav-link"
-                  onClick={handleLogout}
-                >
-                  Cerrar Sesión
-                </Nav.Link>
+                
                 <Nav.Link
                   as={Link}
                   to="/mi-perfil"
                   className="custom-nav-link profile-icon"
+                  title={user?.nombre || "Mi Perfil"}
                 >
                   <svg
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    title="Mi Perfil"
                   >
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                   </svg>
+                  {isAdmin() && <Badge bg="warning" pill className="ms-1" style={{fontSize: '0.6rem'}}>Admin</Badge>}
+                </Nav.Link>
+                
+                <Nav.Link
+                  className="custom-nav-link"
+                  onClick={handleLogout}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Cerrar Sesión
                 </Nav.Link>
               </>
             ) : (
@@ -103,3 +113,4 @@ const CustomNavbar = () => {
 };
 
 export default CustomNavbar;
+

@@ -44,10 +44,9 @@ export const LibrosProvider = ({ children }) => {
         throw new Error(result.error || "No se pudieron cargar los libros.");
       }
     } catch (error) {
-      console.warn("⚠️ Backend no disponible, usando datos locales:", error.message);
       // Fallback: usar datos locales del JSON
       setLibros(librosData);
-      setError(null); // No mostrar error al usuario, solo usar fallback
+      setError(null);
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +69,6 @@ export const LibrosProvider = ({ children }) => {
         return false;
       }
     } catch (error) {
-      console.error("Error al agregar libro:", error);
       setError("Error de conexión al publicar el libro.");
       return false;
     } finally {
@@ -90,7 +88,6 @@ export const LibrosProvider = ({ children }) => {
         return null;
       }
     } catch (error) {
-      console.error("Error al obtener libro:", error);
       setError("Error al obtener detalles del libro.");
       return null;
     }
@@ -112,7 +109,6 @@ export const LibrosProvider = ({ children }) => {
         return false;
       }
     } catch (error) {
-      console.error("Error al eliminar libro:", error);
       setError("Error de conexión al eliminar el libro.");
       return false;
     } finally {

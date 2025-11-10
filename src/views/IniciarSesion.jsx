@@ -71,7 +71,6 @@ const IniciarSesion = () => {
         setMensajeError(result.error || "Error al iniciar sesión");
       }
     } catch (error) {
-      console.error("Error en login:", error);
       setMensajeError("Error inesperado al iniciar sesión");
     }
   };

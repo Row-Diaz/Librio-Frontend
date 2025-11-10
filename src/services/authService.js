@@ -4,23 +4,18 @@ export const authService = {
   // POST /login - Iniciar sesión
   async login(credentials) {
     try {
-      console.log('🔐 Intentando login con:', { email: credentials.email });
       const response = await api.post('/login', credentials);
       const { token } = response.data;
-      
-      console.log('✅ Login exitoso, token recibido');
       
       // Guardar token en localStorage
       localStorage.setItem('token', token);
       
-      // Decodificar token para obtener info del usuario (básico)
-      // En producción, es mejor hacer una llamada a GET /usuarios
+      // Decodificar token para obtener info del usuario
       const userInfo = this.decodeToken(token);
       localStorage.setItem('user', JSON.stringify(userInfo));
       
       return { success: true, token, user: userInfo };
     } catch (error) {
-      console.error('❌ Error en login:', error.response?.data || error.message);
       const message = error.response?.data?.message || error.response?.data?.error || 'Error al iniciar sesión';
       return { success: false, error: message };
     }
@@ -111,7 +106,6 @@ export const authService = {
       );
       return JSON.parse(jsonPayload);
     } catch (error) {
-      console.error('Error decoding token:', error);
       return null;
     }
   },
@@ -119,7 +113,8 @@ export const authService = {
   // Verificar si el usuario es administrador
   isAdmin() {
     const user = this.getCurrentUserFromStorage();
-    return user?.isAdmin || false;
+    // El token JWT del backend usa 'admin', no 'isAdmin'
+    return user?.admin || user?.isAdmin || false;
   }
 };
 

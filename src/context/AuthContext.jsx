@@ -31,8 +31,7 @@ export const AuthProvider = ({ children }) => {
           }
         }
       } catch (error) {
-        console.error('Error al inicializar autenticacion:', error);
-        // No establecer error aquí para no bloquear la app
+        // Error silencioso, no bloquear la app
       } finally {
         setIsLoading(false);
       }
@@ -107,7 +106,7 @@ export const AuthProvider = ({ children }) => {
         setUser(result.user);
       }
     } catch (error) {
-      console.error('Error al refrescar usuario:', error);
+      // Error silencioso al refrescar usuario
     }
   };
 

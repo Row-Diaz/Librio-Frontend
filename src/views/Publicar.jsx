@@ -5,7 +5,7 @@ import { useLibros } from "../context/LibrosContext"; // Acción agregarLibro y 
 import "../assets/styles/Publicar.css"; // Estilos
 
 const Publicar = () => {
-  const { agregarLibro, isLoading } = useLibros();
+  const { agregarLibro, isLoading, error } = useLibros();
 
   // Estado controlado del formulario del libro a publicar
   const [libroData, setLibroData] = useState({
@@ -20,6 +20,7 @@ const Publicar = () => {
   });
   const [errors, setErrors] = useState({}); // Errores por campo
   const [mensaje, setMensaje] = useState(null); // Mensaje de resultado
+  const [mensajeTipo, setMensajeTipo] = useState("success"); // success o danger
 
   // Actualiza el campo editado y limpia su error si existía
   const handleInputChange = (e) => {
@@ -40,6 +41,8 @@ const Publicar = () => {
     if (!libroData.año) newErrors.año = "El año es obligatorio.";
     else if (parseInt(libroData.año) > new Date().getFullYear())
       newErrors.año = "El año no puede ser futuro.";
+    else if (parseInt(libroData.año) < 1000 || parseInt(libroData.año) > 9999)
+      newErrors.año = "El año debe tener 4 dígitos.";
     if (!libroData.urlImagen.trim())
       newErrors.urlImagen = "La URL de la imagen es obligatoria.";
     return newErrors;
@@ -61,7 +64,8 @@ const Publicar = () => {
       año: parseInt(libroData.año),
     });
 
-    if (resultado.success) {
+    if (resultado) {
+      setMensajeTipo("success");
       setMensaje("¡Libro publicado exitosamente!");
       setLibroData({
         titulo: "",
@@ -75,7 +79,8 @@ const Publicar = () => {
       });
       setErrors({});
     } else {
-      setMensaje(`Error: ${resultado.error}`);
+      setMensajeTipo("danger");
+      setMensaje(error || "Error al publicar el libro. Intenta de nuevo.");
     }
   };
 
@@ -88,7 +93,7 @@ const Publicar = () => {
 
             {mensaje && (
               <Alert
-                variant={mensaje.includes("Error") ? "danger" : "success"}
+                variant={mensajeTipo}
                 className="mt-4"
               >
                 {mensaje}
@@ -139,7 +144,7 @@ const Publicar = () => {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formAño">
-                <Form.Label>Año</Form.Label>
+                <Form.Label>Año de Publicación</Form.Label>
                 <Form.Control
                   type="number"
                   name="año"
@@ -147,6 +152,10 @@ const Publicar = () => {
                   onChange={handleInputChange}
                   isInvalid={!!errors.año}
                   className="publicar-input"
+                  placeholder="Ej: 2024"
+                  min="1000"
+                  max="9999"
+                  maxLength="4"
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.año}
@@ -155,13 +164,26 @@ const Publicar = () => {
 
               <Form.Group className="mb-3" controlId="formGenero">
                 <Form.Label>Género</Form.Label>
-                <Form.Control
-                  type="text"
+                <Form.Select
                   name="genero"
                   value={libroData.genero}
                   onChange={handleInputChange}
                   className="publicar-input"
-                />
+                >
+                  <option value="">Selecciona un género</option>
+                  <option value="Fant">Fantasía</option>
+                  <option value="Fici">Ficción</option>
+                  <option value="Roma">Romance</option>
+                  <option value="Terr">Terror</option>
+                  <option value="Mist">Misterio</option>
+                  <option value="Biog">Biografía</option>
+                  <option value="Hist">Historia</option>
+                  <option value="Cien">Ciencia</option>
+                  <option value="Arte">Arte</option>
+                  <option value="Auto">Autoayuda</option>
+                  <option value="Aven">Aventura</option>
+                  <option value="Educ">Educación</option>
+                </Form.Select>
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formDescripcion">
@@ -205,6 +227,28 @@ const Publicar = () => {
                 <Form.Control.Feedback type="invalid">
                   {errors.urlImagen}
                 </Form.Control.Feedback>
+                
+                {/* Vista previa de la imagen */}
+                {libroData.urlImagen && (
+                  <div className="mt-3 text-center">
+                    <p className="text-muted small mb-2">Vista previa:</p>
+                    <img
+                      src={libroData.urlImagen}
+                      alt="Vista previa"
+                      style={{
+                        maxWidth: "200px",
+                        maxHeight: "300px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                        border: "2px solid #dee2e6"
+                      }}
+                      onError={(e) => {
+                        e.target.src = "https://placehold.co/200x300/dc3545/ffffff?text=Error+al+cargar";
+                        e.target.style.border = "2px solid #dc3545";
+                      }}
+                    />
+                  </div>
+                )}
               </Form.Group>
 
               <div className="d-grid">
