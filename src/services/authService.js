@@ -4,7 +4,10 @@ export const authService = {
   // POST /login - Iniciar sesión
   async login(credentials) {
     try {
+      console.log('📡 Enviando petición de login a:', '/login');
+      console.log('📡 Credenciales:', { email: credentials.email, password: '***' });
       const response = await api.post('/login', credentials);
+      console.log('📡 Respuesta del servidor:', response.data);
       const { token } = response.data;
       
       // Guardar token en localStorage
@@ -12,10 +15,15 @@ export const authService = {
       
       // Decodificar token para obtener info del usuario
       const userInfo = this.decodeToken(token);
+      console.log('📡 Usuario decodificado:', userInfo);
       localStorage.setItem('user', JSON.stringify(userInfo));
       
       return { success: true, token, user: userInfo };
     } catch (error) {
+      console.error('📡 Error en login:', error);
+      console.error('📡 Error response completo:', JSON.stringify(error.response?.data, null, 2));
+      console.error('📡 Status:', error.response?.status);
+      console.error('📡 Headers:', error.response?.headers);
       const message = error.response?.data?.message || error.response?.data?.error || 'Error al iniciar sesión';
       return { success: false, error: message };
     }

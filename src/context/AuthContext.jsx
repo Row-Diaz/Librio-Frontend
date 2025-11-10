@@ -46,7 +46,9 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     
     try {
+      console.log('🔐 Iniciando login con:', credentials.email);
       const result = await authService.login(credentials);
+      console.log('🔐 Resultado del login:', result);
       
       if (result.success) {
         setUser(result.user);
@@ -57,6 +59,7 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: result.error };
       }
     } catch (error) {
+      console.error('🔐 Error en login:', error);
       const errorMessage = 'Error inesperado al iniciar sesión';
       setError(errorMessage);
       return { success: false, error: errorMessage };
