@@ -1,11 +1,27 @@
-import { Container, Row, Col, Card, Button, Spinner, Alert } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Spinner, Alert, Pagination } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useLibros } from "../context/LibrosContext";
+import { useState, useEffect } from "react";
 import "../assets/styles/Galeria.css"; // Se importa el CSS actualizado
 
 const Galeria = () => {
   const navigate = useNavigate();
   const { libros, isLoading, error } = useLibros();
+  
+  // Estado para la paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const librosPorPagina = 12;
+  
+  // Calcular índices para la paginación
+  const indiceUltimo = paginaActual * librosPorPagina;
+  const indicePrimero = indiceUltimo - librosPorPagina;
+  const librosActuales = libros.slice(indicePrimero, indiceUltimo);
+  const totalPaginas = Math.ceil(libros.length / librosPorPagina);
+  
+  // Reset a página 1 cuando cambian los libros
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [libros]);
   
   const handleVerDetalles = (libroId) => {
     navigate(`/detalles/${libroId}`);
@@ -17,6 +33,20 @@ const Galeria = () => {
       currency: "COP",
       minimumFractionDigits: 0,
     }).format(precio);
+  };
+  
+  const irPaginaAnterior = () => {
+    if (paginaActual > 1) {
+      setPaginaActual(paginaActual - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+  
+  const irPaginaSiguiente = () => {
+    if (paginaActual < totalPaginas) {
+      setPaginaActual(paginaActual + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -61,7 +91,7 @@ const Galeria = () => {
         )}
 
         <Row className="justify-content-center g-4">
-          {libros.map((libro) => (
+          {librosActuales.map((libro) => (
             <Col key={libro.id} xs={12} sm={6} md={4}>
               <Card className="galeria-card">
                 <Card.Img
@@ -93,6 +123,34 @@ const Galeria = () => {
             </Col>
           ))}
         </Row>
+
+        {/* Controles de paginación */}
+        {!isLoading && !error && libros.length > librosPorPagina && (
+          <div className="d-flex justify-content-center align-items-center mt-5 mb-4">
+            <Button
+              variant="outline-primary"
+              onClick={irPaginaAnterior}
+              disabled={paginaActual === 1}
+              className="me-3"
+            >
+              ← Anterior
+            </Button>
+            
+            <span className="mx-3">
+              Página <strong>{paginaActual}</strong> de <strong>{totalPaginas}</strong>
+              {' '}({libros.length} libros en total)
+            </span>
+            
+            <Button
+              variant="outline-primary"
+              onClick={irPaginaSiguiente}
+              disabled={paginaActual === totalPaginas}
+              className="ms-3"
+            >
+              Siguiente →
+            </Button>
+          </div>
+        )}
       </Container>
     </div>
   );
