@@ -60,7 +60,7 @@ export const librosService = {
   // Función auxiliar para normalizar datos del backend al frontend
   normalizeLibroFromBackend(libro) {
     return {
-      id: libro.id,
+      id: libro.id_libros, // El backend usa id_libros
       titulo: libro.titulo,
       autor: libro.autor,
       editorial: libro.editorial,

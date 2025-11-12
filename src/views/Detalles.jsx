@@ -65,7 +65,7 @@ const Detalles = () => {
         <Row className="detalles-content-wrapper">
           <Col md={5} lg={4} className="detalles-img-col">
             <Image
-              src={libro.urlImagen}
+              src={libro.urlImagen || libro.url_img}
               alt={`Portada de ${libro.titulo}`}
               className="detalles-img"
               onError={(e) => {

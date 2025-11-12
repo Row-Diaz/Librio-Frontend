@@ -64,12 +64,12 @@ const Carrito = () => {
               >
                 <Col xs={3} md={2}>
                   <Image
-                    src={item.urlImagen}
+                    src={item.urlImagen || item.url_img}
                     alt={item.titulo}
                     className="carrito-item-img"
                     onError={(e) => {
                       e.target.src =
-                        "https://placehold.co/100x120/8b5a8c/ffffff?text=Sin+Imagen";
+                        "https://placehold.co/400x120/8b5a8c/ffffff?text=Sin+Imagen";
                     }}
                   />
                 </Col>
