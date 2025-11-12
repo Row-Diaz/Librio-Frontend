@@ -76,8 +76,14 @@ const Carrito = () => {
 
                 <Col xs={5} md={6} className="carrito-item-info">
                   <h5 className="carrito-item-titulo">{item.titulo}</h5>
-                  <p className="carrito-item-precio">
-                    {formatNumber(item.precio * item.count)}
+                  <p className="carrito-item-precio mb-1">
+                    Precio unitario: {formatNumber(item.precio)}
+                  </p>
+                  <p className="carrito-item-cantidad-texto mb-1">
+                    Cantidad: {item.count}
+                  </p>
+                  <p className="carrito-item-subtotal">
+                    <strong>Subtotal: {formatNumber(item.precio * item.count)}</strong>
                   </p>
                 </Col>
 
