@@ -39,7 +39,7 @@ const Home = () => {
             {/* Primera Fila */}
             <Col md={6} lg={8} xs={12}>
               <Image
-                src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                src="https://res.cloudinary.com/dl6c4gbix/image/upload/f_auto,q_auto/v1762991830/escudo_oi6ruz.jpg"
                 alt="Estantería de libros"
                 className="gallery-image" // Clase unificada para todas las imágenes de la galería
                 fluid
