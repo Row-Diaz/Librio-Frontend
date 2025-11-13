@@ -5,11 +5,23 @@ import {
   Col,          // Columna del grid system
   Image         // Componente de imagen responsiva
 } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; // Para navegación
+import { Link, useNavigate } from 'react-router-dom'; // Para navegación
+import { useAuth } from '../context/AuthContext'; // Para verificar autenticación
 
 import '../assets/styles/Home.css'; // Importa los estilos específicos de Home
 
 const Home = () => {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleEmpezarClick = () => {
+    if (isAuthenticated) {
+      navigate('/galeria');
+    } else {
+      navigate('/iniciar-sesion');
+    }
+  };
+
   return (
     // 'home-page-wrapper' para controlar el layout de toda la página
     <div className="home-page-wrapper"> 
@@ -22,7 +34,7 @@ const Home = () => {
               <h1 className="hero-title">
                 "Encuentra tu próxima gran lectura. Donde cada libro tiene una nueva historia que contar."
               </h1>
-              <Button size="lg" className="cta-button" as={Link} to="/iniciar-sesion">
+              <Button size="lg" className="cta-button" onClick={handleEmpezarClick}>
                 Empezar
               </Button>
             </Col>
