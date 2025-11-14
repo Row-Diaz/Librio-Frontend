@@ -15,19 +15,25 @@ import {
   Button,
   Image,
   Table,
-  Spinner
+  Spinner,
+  Form,
+  Alert
 } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
 import { pedidosService } from '../services/pedidosService';
+import { authService } from '../services/authService';
 import '../assets/styles/MiPerfil.css';
 
 /**
  * Componente funcional MiPerfil
  */
 const MiPerfil = () => {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [pedidos, setPedidos] = useState([]);
   const [isLoadingPedidos, setIsLoadingPedidos] = useState(true);
+  const [urlImagen, setUrlImagen] = useState('');
+  const [isUpdatingImage, setIsUpdatingImage] = useState(false);
+  const [mensaje, setMensaje] = useState({ tipo: '', texto: '' });
 
   /**
    * Cargar pedidos del usuario al montar el componente
@@ -56,14 +62,36 @@ const MiPerfil = () => {
   }, [user]);
 
   /**
-   * Maneja la carga de imagen de perfil
-   * TODO: Implementar funcionalidad de carga de imagen
+   * Maneja la actualización de la foto de perfil
    */
-  const handleImageUpload = () => {
-    // TODO: Abrir selector de archivos
-    // TODO: Validar formato de imagen
-    // TODO: Subir imagen al servidor
-    // TODO: Actualizar estado con nueva imagen
+  const handleImageUpload = async () => {
+    if (!urlImagen.trim()) {
+      setMensaje({ tipo: 'danger', texto: 'Por favor ingresa una URL de imagen' });
+      return;
+    }
+
+    setIsUpdatingImage(true);
+    setMensaje({ tipo: '', texto: '' });
+
+    try {
+      const result = await authService.actualizarFotoPerfil(urlImagen);
+      
+      if (result.success) {
+        setMensaje({ tipo: 'success', texto: '¡Foto de perfil actualizada exitosamente!' });
+        setUrlImagen('');
+        // Actualizar el contexto con la nueva foto
+        if (updateUser) {
+          updateUser({ ...user, foto_perfil: urlImagen });
+        }
+        setTimeout(() => setMensaje({ tipo: '', texto: '' }), 3000);
+      } else {
+        setMensaje({ tipo: 'danger', texto: result.error });
+      }
+    } catch (error) {
+      setMensaje({ tipo: 'danger', texto: 'Error al actualizar la foto de perfil' });
+    } finally {
+      setIsUpdatingImage(false);
+    }
   };
 
   const formatearFecha = (fecha) => {
@@ -108,14 +136,22 @@ const MiPerfil = () => {
                       {/* Contenedor circular para foto de perfil */}
                       <div className="perfil-imagen-container">
                         <div className="perfil-imagen">
-                          {/* Icono de usuario por defecto */}
-                          <svg
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                            className="user-icon"
-                          >
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                          </svg>
+                          {user.foto_perfil ? (
+                            <Image 
+                              src={user.foto_perfil} 
+                              alt="Foto de perfil" 
+                              roundedCircle 
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
+                          ) : (
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                              className="user-icon"
+                            >
+                              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                            </svg>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -138,29 +174,69 @@ const MiPerfil = () => {
 
                       {/* ====== CARGAR IMAGEN ====== */}
                       <Col md={12} className="mb-4">
-                        <div className="cargar-imagen-section text-center">
+                        <div className="cargar-imagen-section">
                           {/* Título de la sección */}
-                          <h4 className="seccion-titulo">
-                            Cargar Imagen de Perfil
+                          <h4 className="seccion-titulo text-center mb-3">
+                            Actualizar Foto de Perfil
                           </h4>
 
-                          {/* Botón de carga con icono */}
-                          <Button
-                            className="cargar-imagen-btn"
-                            onClick={handleImageUpload}
-                          >
-                            {/* Icono de subida */}
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                              className="upload-icon me-2"
+                          {/* Mensaje de feedback */}
+                          {mensaje.texto && (
+                            <Alert variant={mensaje.tipo} className="mb-3">
+                              {mensaje.texto}
+                            </Alert>
+                          )}
+
+                          {/* Formulario de URL de imagen */}
+                          <Form.Group className="mb-3">
+                            <Form.Label>URL de la imagen</Form.Label>
+                            <Form.Control
+                              type="url"
+                              placeholder="https://ejemplo.com/mi-foto.jpg"
+                              value={urlImagen}
+                              onChange={(e) => setUrlImagen(e.target.value)}
+                              disabled={isUpdatingImage}
+                            />
+                            <Form.Text className="text-muted">
+                              Ingresa la URL de tu foto de perfil
+                            </Form.Text>
+                          </Form.Group>
+
+                          {/* Botón de carga */}
+                          <div className="text-center">
+                            <Button
+                              className="cargar-imagen-btn"
+                              onClick={handleImageUpload}
+                              disabled={isUpdatingImage}
                             >
-                              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
-                              <path d="M12,19L8,15H10.5V12H13.5V15H16L12,19Z" />
-                            </svg>
-                            {/* Texto del botón */}
-                            <span>Subir Imagen</span>
-                          </Button>
+                              {isUpdatingImage ? (
+                                <>
+                                  <Spinner
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    className="me-2"
+                                  />
+                                  Actualizando...
+                                </>
+                              ) : (
+                                <>
+                                  {/* Icono de subida */}
+                                  <svg
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    className="upload-icon me-2"
+                                    style={{ width: '20px', height: '20px', display: 'inline-block' }}
+                                  >
+                                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                                    <path d="M12,19L8,15H10.5V12H13.5V15H16L12,19Z" />
+                                  </svg>
+                                  {/* Texto del botón */}
+                                  <span>Actualizar Foto</span>
+                                </>
+                              )}
+                            </Button>
+                          </div>
                         </div>
                       </Col>
 
