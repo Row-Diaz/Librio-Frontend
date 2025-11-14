@@ -191,13 +191,13 @@ const MiPerfil = () => {
                               </thead>
                               <tbody>
                                 {pedidos.map((pedido, index) => (
-                                  <tr key={pedido.id}>
+                                  <tr key={pedido.id_pedido}>
                                     <td>{index + 1}</td>
-                                    <td>{formatearFecha(pedido.fecha)}</td>
-                                    <td>{formatearPrecio(pedido.total)}</td>
+                                    <td>{formatearFecha(pedido.fecha_pedido)}</td>
+                                    <td>{formatearPrecio(pedido.monto_total)}</td>
                                     <td>
-                                      <span className="badge bg-success">
-                                        {pedido.estado || 'Completado'}
+                                      <span className={`badge ${pedido.estado ? 'bg-success' : 'bg-warning'}`}>
+                                        {pedido.estado ? 'Completado' : 'Pendiente'}
                                       </span>
                                     </td>
                                   </tr>
