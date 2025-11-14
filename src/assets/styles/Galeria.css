@@ -6,11 +6,11 @@
 
 .galeria-hero-section {
   position: relative;
-  min-height: 76vh;
+  min-height: 35vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 80px 0 60px 0;
+  padding: 40px 0 30px 0;
   background-image: url("https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80");
   background-size: cover;
   background-position: center;
@@ -46,7 +46,7 @@
 }
 
 .galeria-cards-area {
-  padding-top: 4rem;
+  padding-top: 2rem;
   padding-bottom: 4rem;
 }
 
