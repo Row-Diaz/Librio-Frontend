@@ -123,26 +123,6 @@ export const authService = {
     const user = this.getCurrentUserFromStorage();
     // El token JWT del backend usa 'admin', no 'isAdmin'
     return user?.admin || user?.isAdmin || false;
-  },
-
-  // Actualizar foto de perfil
-  async actualizarFotoPerfil(foto_perfil) {
-    try {
-      const response = await api.put('/usuarios/foto-perfil', { foto_perfil });
-      
-      // Actualizar el usuario en localStorage
-      const user = this.getCurrentUserFromStorage();
-      if (user) {
-        user.foto_perfil = foto_perfil;
-        localStorage.setItem('user', JSON.stringify(user));
-      }
-      
-      return { success: true, usuario: response.data.usuario };
-    } catch (error) {
-      console.error('Error al actualizar foto de perfil:', error);
-      const message = error.response?.data?.error || 'Error al actualizar la foto de perfil';
-      return { success: false, error: message };
-    }
   }
 };
 
