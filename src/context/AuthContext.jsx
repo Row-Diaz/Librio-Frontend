@@ -118,6 +118,12 @@ export const AuthProvider = ({ children }) => {
     return authService.isAdmin();
   };
 
+  // Actualizar datos del usuario
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+  };
+
   const value = {
     user,
     isAuthenticated,
@@ -127,7 +133,8 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     refreshUser,
-    isAdmin
+    isAdmin,
+    updateUser
   };
 
   return (
