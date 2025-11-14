@@ -2,33 +2,58 @@
  * Componente MiPerfil - Página de perfil de usuario
  * 
  * Este componente renderiza la página de perfil del usuario en Librio.
- * Incluye información personal, foto de perfil y descripción del vendedor.
+ * Incluye información personal, foto de perfil y historial de pedidos.
  * Utiliza componentes modulares (Navbar y Footer) y React Bootstrap.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Row,
   Col,
   Card,
   Button,
-  Image
+  Image,
+  Table,
+  Spinner
 } from 'react-bootstrap';
+import { useAuth } from '../context/AuthContext';
+import { pedidosService } from '../services/pedidosService';
 import '../assets/styles/MiPerfil.css';
 
 /**
  * Componente funcional MiPerfil
  */
 const MiPerfil = () => {
+  const { user } = useAuth();
+  const [pedidos, setPedidos] = useState([]);
+  const [isLoadingPedidos, setIsLoadingPedidos] = useState(true);
 
-  // ====== ESTADO DEL COMPONENTE ======
-  // Estado para manejar la información del usuario
-  const [usuario] = useState({
-    nombre: 'John Doe',                    // Nombre del usuario
-    email: 'john@gmail.com',               // Email del usuario
-    descripcion: 'Soy John Doe, y te doy la bienvenida a mi selección de libros en Librio. Mi objetivo no es solo vender libros, sino asegurar que cada volumen encuentre el lector adecuado que sepa apreciar su valor.'
-  });
+  /**
+   * Cargar pedidos del usuario al montar el componente
+   */
+  useEffect(() => {
+    const cargarPedidos = async () => {
+      if (!user) return;
+      
+      try {
+        setIsLoadingPedidos(true);
+        const result = await pedidosService.obtenerPedidosUsuario();
+        
+        if (result.success) {
+          setPedidos(result.pedidos);
+        } else {
+          console.error('Error al cargar pedidos:', result.error);
+        }
+      } catch (error) {
+        console.error('Error al cargar pedidos:', error);
+      } finally {
+        setIsLoadingPedidos(false);
+      }
+    };
+
+    cargarPedidos();
+  }, [user]);
 
   /**
    * Maneja la carga de imagen de perfil
@@ -40,6 +65,26 @@ const MiPerfil = () => {
     // TODO: Subir imagen al servidor
     // TODO: Actualizar estado con nueva imagen
   };
+
+  const formatearFecha = (fecha) => {
+    return new Date(fecha).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const formatearPrecio = (precio) => {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0
+    }).format(precio);
+  };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <>
@@ -79,12 +124,12 @@ const MiPerfil = () => {
                     <div className="text-center mb-4">
                       {/* Nombre del usuario */}
                       <h2 className="perfil-nombre">
-                        {usuario.nombre}
+                        {user.nombre}
                       </h2>
 
                       {/* Email del usuario */}
                       <p className="perfil-email">
-                        {usuario.email}
+                        {user.email}
                       </p>
                     </div>
 
@@ -92,11 +137,11 @@ const MiPerfil = () => {
                     <Row className="align-items-center">
 
                       {/* ====== CARGAR IMAGEN ====== */}
-                      <Col md={6} className="mb-3 mb-md-0">
-                        <div className="cargar-imagen-section">
+                      <Col md={12} className="mb-4">
+                        <div className="cargar-imagen-section text-center">
                           {/* Título de la sección */}
                           <h4 className="seccion-titulo">
-                            Cargar Imagen
+                            Cargar Imagen de Perfil
                           </h4>
 
                           {/* Botón de carga con icono */}
@@ -119,18 +164,47 @@ const MiPerfil = () => {
                         </div>
                       </Col>
 
-                      {/* ====== SOBRE MÍ ====== */}
-                      <Col md={6}>
-                        <div className="sobre-mi-section">
-                          {/* Título de la sección */}
-                          <h4 className="seccion-titulo">
-                            Sobre mí
+                      {/* ====== HISTORIAL DE PEDIDOS ====== */}
+                      <Col md={12}>
+                        <div className="pedidos-section">
+                          <h4 className="seccion-titulo mb-3">
+                            Mis Pedidos
                           </h4>
 
-                          {/* Descripción del usuario */}
-                          <p className="descripcion-texto">
-                            {usuario.descripcion}
-                          </p>
+                          {isLoadingPedidos ? (
+                            <div className="text-center py-4">
+                              <Spinner animation="border" variant="primary" />
+                            </div>
+                          ) : pedidos.length === 0 ? (
+                            <p className="text-muted text-center py-4">
+                              No tienes pedidos realizados aún.
+                            </p>
+                          ) : (
+                            <Table responsive hover className="pedidos-table">
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>Fecha</th>
+                                  <th>Total</th>
+                                  <th>Estado</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {pedidos.map((pedido, index) => (
+                                  <tr key={pedido.id}>
+                                    <td>{index + 1}</td>
+                                    <td>{formatearFecha(pedido.fecha)}</td>
+                                    <td>{formatearPrecio(pedido.total)}</td>
+                                    <td>
+                                      <span className="badge bg-success">
+                                        {pedido.estado || 'Completado'}
+                                      </span>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </Table>
+                          )}
                         </div>
                       </Col>
                     </Row>

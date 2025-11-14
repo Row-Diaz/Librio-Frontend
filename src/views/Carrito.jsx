@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Alert, Container, Row, Col, Image } from "react-bootstrap";
 import { useCart } from "../context/CartContext";
+import { pedidosService } from "../services/pedidosService";
 import "../assets/styles/Carrito.css";
 
 const Carrito = () => {
@@ -14,6 +15,7 @@ const Carrito = () => {
 
   const [checkoutMessage, setCheckoutMessage] = useState(null);
   const [messageVariant, setMessageVariant] = useState("success");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const formatNumber = (num) => {
     return new Intl.NumberFormat("es-CO", {
@@ -27,16 +29,25 @@ const Carrito = () => {
 
   const handleCheckout = async () => {
     setCheckoutMessage(null);
+    setIsProcessing(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      setCheckoutMessage("¡Compra realizada con éxito!");
-      setMessageVariant("success");
-      clearCart();
+      // Crear el pedido en el backend
+      const result = await pedidosService.crearPedido(cart);
+      
+      if (result.success) {
+        setCheckoutMessage("¡Compra realizada con éxito! Tu pedido ha sido registrado.");
+        setMessageVariant("success");
+        clearCart();
+      } else {
+        setCheckoutMessage(result.error || "Error al procesar el pedido");
+        setMessageVariant("danger");
+      }
     } catch (error) {
       setCheckoutMessage("Error de red o el servidor no está disponible.");
       setMessageVariant("danger");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -118,9 +129,9 @@ const Carrito = () => {
                   <Button
                     className="carrito-btn-pagar"
                     onClick={handleCheckout}
-                    disabled={cart.length === 0}
+                    disabled={cart.length === 0 || isProcessing}
                   >
-                    Pagar
+                    {isProcessing ? 'Procesando...' : 'Pagar'}
                   </Button>
                 </Col>
               </Row>
