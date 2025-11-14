@@ -27,25 +27,25 @@ const Carrito = () => {
 
   const total = calculateTotal();
 
-  const handleCheckout = async () => {
-    setCheckoutMessage(null);
+    const handleCheckout = async () => {
     setIsProcessing(true);
+    setCheckoutMessage('');
 
     try {
-      // Crear el pedido en el backend
+      console.log('Enviando carrito al backend:', cart);
       const result = await pedidosService.crearPedido(cart);
       
       if (result.success) {
         setCheckoutMessage("¡Compra realizada con éxito! Tu pedido ha sido registrado.");
-        setMessageVariant("success");
         clearCart();
+        setTimeout(() => setCheckoutMessage(''), 5000);
       } else {
-        setCheckoutMessage(result.error || "Error al procesar el pedido");
-        setMessageVariant("danger");
+        console.error('Error del servidor:', result.error);
+        setCheckoutMessage(`Error: ${result.error || 'No se pudo procesar el pedido'}`);
       }
     } catch (error) {
-      setCheckoutMessage("Error de red o el servidor no está disponible.");
-      setMessageVariant("danger");
+      console.error('Error al procesar el pedido:', error);
+      setCheckoutMessage('Error de red. Por favor, intenta nuevamente.');
     } finally {
       setIsProcessing(false);
     }
