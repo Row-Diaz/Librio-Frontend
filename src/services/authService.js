@@ -123,6 +123,41 @@ export const authService = {
     const user = this.getCurrentUserFromStorage();
     // El token JWT del backend usa 'admin', no 'isAdmin'
     return user?.admin || user?.isAdmin || false;
+  },
+
+  /**
+   * Actualizar foto de perfil del usuario autenticado
+   */
+  async actualizarFotoPerfil(foto_perfil) {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No hay sesión activa');
+      }
+
+      const response = await axios.put(
+        `${API_URL}/usuarios/foto-perfil`,
+        { foto_perfil },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      // Actualizar usuario en localStorage
+      const user = this.getCurrentUserFromStorage();
+      const updatedUser = { ...user, foto_perfil: response.data.foto_perfil };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+
+      return { success: true, usuario: updatedUser };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.error || 'Error al actualizar foto de perfil'
+      };
+    }
   }
 };
 

@@ -113,6 +113,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Actualizar usuario
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+  };
+
   // Verificar si es administrador
   const isAdmin = () => {
     return authService.isAdmin();
@@ -127,6 +133,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     refreshUser,
+    updateUser,
     isAdmin
   };
 

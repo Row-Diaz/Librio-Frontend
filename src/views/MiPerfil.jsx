@@ -6,7 +6,7 @@
  * Utiliza componentes modulares (Navbar y Footer) y React Bootstrap.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Container,
   Row,
@@ -15,19 +15,24 @@ import {
   Button,
   Image,
   Table,
-  Spinner
+  Spinner,
+  Alert
 } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
 import { pedidosService } from '../services/pedidosService';
+import authService from '../services/authService';
 import '../assets/styles/MiPerfil.css';
 
 /**
  * Componente funcional MiPerfil
  */
 const MiPerfil = () => {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [pedidos, setPedidos] = useState([]);
   const [isLoadingPedidos, setIsLoadingPedidos] = useState(true);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [mensaje, setMensaje] = useState(null);
+  const fileInputRef = useRef(null);
 
   /**
    * Cargar pedidos del usuario al montar el componente
@@ -57,13 +62,65 @@ const MiPerfil = () => {
 
   /**
    * Maneja la carga de imagen de perfil
-   * TODO: Implementar funcionalidad de carga de imagen
    */
   const handleImageUpload = () => {
-    // TODO: Abrir selector de archivos
-    // TODO: Validar formato de imagen
-    // TODO: Subir imagen al servidor
-    // TODO: Actualizar estado con nueva imagen
+    fileInputRef.current?.click();
+  };
+
+  /**
+   * Procesa el archivo seleccionado y lo convierte a base64
+   */
+  const handleFileChange = async (event) => {
+    const file = event.target.files?.[0];
+    
+    if (!file) return;
+
+    // Validar tipo de archivo
+    if (!file.type.startsWith('image/')) {
+      setMensaje({ tipo: 'danger', texto: 'Por favor selecciona una imagen válida' });
+      return;
+    }
+
+    // Validar tamaño (máximo 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      setMensaje({ tipo: 'danger', texto: 'La imagen no debe superar 2MB' });
+      return;
+    }
+
+    setIsUploadingImage(true);
+    setMensaje(null);
+
+    try {
+      // Convertir a base64
+      const reader = new FileReader();
+      
+      reader.onload = async (e) => {
+        const base64Image = e.target.result;
+        
+        // Enviar al backend
+        const result = await authService.actualizarFotoPerfil(base64Image);
+        
+        if (result.success) {
+          updateUser(result.usuario);
+          setMensaje({ tipo: 'success', texto: '¡Foto de perfil actualizada exitosamente!' });
+          event.target.value = '';
+        } else {
+          setMensaje({ tipo: 'danger', texto: result.error });
+        }
+        
+        setIsUploadingImage(false);
+      };
+
+      reader.onerror = () => {
+        setMensaje({ tipo: 'danger', texto: 'Error al leer la imagen' });
+        setIsUploadingImage(false);
+      };
+
+      reader.readAsDataURL(file);
+    } catch (error) {
+      setMensaje({ tipo: 'danger', texto: 'Error al subir la imagen' });
+      setIsUploadingImage(false);
+    }
   };
 
   const formatearFecha = (fecha) => {
@@ -108,14 +165,21 @@ const MiPerfil = () => {
                       {/* Contenedor circular para foto de perfil */}
                       <div className="perfil-imagen-container">
                         <div className="perfil-imagen">
-                          {/* Icono de usuario por defecto */}
-                          <svg
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                            className="user-icon"
-                          >
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                          </svg>
+                          {user?.foto_perfil ? (
+                            <img 
+                              src={user.foto_perfil} 
+                              alt="Foto de perfil" 
+                              style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                            />
+                          ) : (
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                              className="user-icon"
+                            >
+                              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                            </svg>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -138,28 +202,60 @@ const MiPerfil = () => {
 
                       {/* ====== CARGAR IMAGEN ====== */}
                       <Col md={12} className="mb-4">
+                        {mensaje && (
+                          <Alert variant={mensaje.tipo} onClose={() => setMensaje(null)} dismissible>
+                            {mensaje.texto}
+                          </Alert>
+                        )}
+                        
                         <div className="cargar-imagen-section text-center">
                           {/* Título de la sección */}
                           <h4 className="seccion-titulo">
                             Cargar Imagen de Perfil
                           </h4>
 
+                          {/* Input oculto para seleccionar archivo */}
+                          <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                          />
+
                           {/* Botón de carga con icono */}
                           <Button
                             className="cargar-imagen-btn"
                             onClick={handleImageUpload}
+                            disabled={isUploadingImage}
                           >
-                            {/* Icono de subida */}
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                              className="upload-icon me-2"
-                            >
-                              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
-                              <path d="M12,19L8,15H10.5V12H13.5V15H16L12,19Z" />
-                            </svg>
-                            {/* Texto del botón */}
-                            <span>Subir Imagen</span>
+                            {isUploadingImage ? (
+                              <>
+                                <Spinner
+                                  as="span"
+                                  animation="border"
+                                  size="sm"
+                                  role="status"
+                                  aria-hidden="true"
+                                  className="me-2"
+                                />
+                                <span>Subiendo...</span>
+                              </>
+                            ) : (
+                              <>
+                                {/* Icono de subida */}
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  fill="currentColor"
+                                  className="upload-icon me-2"
+                                >
+                                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                                  <path d="M12,19L8,15H10.5V12H13.5V15H16L12,19Z" />
+                                </svg>
+                                {/* Texto del botón */}
+                                <span>Subir Imagen</span>
+                              </>
+                            )}
                           </Button>
                         </div>
                       </Col>
