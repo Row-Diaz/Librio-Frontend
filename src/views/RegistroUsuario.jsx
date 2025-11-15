@@ -133,8 +133,8 @@ const RegistroUsuario = () => {
                     Regístrate
                   </h2>
 
-                  {(mensaje || error) && (
-                    <Alert variant={variant}>{mensaje || error}</Alert>
+                  {mensaje && (
+                    <Alert variant={variant}>{mensaje}</Alert>
                   )}
 
                   <Form noValidate onSubmit={handleSubmit}>
