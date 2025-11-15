@@ -6,7 +6,6 @@ import React, {
   useEffect,
 } from "react";
 import { librosService } from "../services/librosService";
-import librosData from "../views/libros.json";
 
 const LibrosContext = createContext();
 
@@ -44,9 +43,9 @@ export const LibrosProvider = ({ children }) => {
         throw new Error(result.error || "No se pudieron cargar los libros.");
       }
     } catch (error) {
-      // Fallback: usar datos locales del JSON
-      setLibros(librosData);
-      setError(null);
+      console.error('Error al cargar libros:', error);
+      setError(error.message || "Error al conectar con el servidor.");
+      setLibros([]);
     } finally {
       setIsLoading(false);
     }
