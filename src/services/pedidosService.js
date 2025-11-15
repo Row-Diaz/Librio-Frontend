@@ -12,12 +12,22 @@ export const pedidosService = {
         precio: item.precio,
         count: item.count
       }));
+
+      console.log('Enviando pedido con datos:', carritoSimplificado);
+      console.log('Token presente:', !!localStorage.getItem('token'));
       
       const response = await api.post('/pedidos', { carrito: carritoSimplificado });
       return { success: true, pedido: response.data.pedido };
     } catch (error) {
-      console.error('Error al crear pedido:', error);
-      const message = error.response?.data?.error || 'Error al crear el pedido';
+      console.error('Error completo al crear pedido:', {
+        message: error.message,
+        code: error.code,
+        response: error.response?.data,
+        status: error.response?.status,
+        stack: error.stack
+      });
+      
+      const message = error.response?.data?.error || error.message || 'Error al crear el pedido';
       return { success: false, error: message };
     }
   },
