@@ -6,7 +6,14 @@ export const pedidosService = {
    */
   async crearPedido(carrito) {
     try {
-      const response = await api.post('/pedidos', { carrito });
+      // Enviar solo los datos esenciales (sin url_img base64)
+      const carritoSimplificado = carrito.map(item => ({
+        id: item.id,
+        precio: item.precio,
+        count: item.count
+      }));
+      
+      const response = await api.post('/pedidos', { carrito: carritoSimplificado });
       return { success: true, pedido: response.data.pedido };
     } catch (error) {
       console.error('Error al crear pedido:', error);
