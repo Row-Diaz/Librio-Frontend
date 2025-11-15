@@ -29,10 +29,8 @@ const Carrito = () => {
 
     const handleCheckout = async () => {
     setIsProcessing(true);
-    setCheckoutMessage('');
-
+    
     try {
-      console.log('Enviando carrito al backend:', cart);
       const result = await pedidosService.crearPedido(cart);
       
       if (result.success) {

@@ -100,8 +100,6 @@ const MiPerfil = () => {
         // Enviar al backend
         const result = await authService.actualizarFotoPerfil(base64Image);
         
-        console.log('Resultado de actualizar foto:', result);
-        
         if (result.success) {
           updateUser(result.usuario);
           setMensaje({ tipo: 'success', texto: '¡Foto de perfil actualizada exitosamente!' });

@@ -19,7 +19,6 @@ const CustomNavbar = () => {
   const handleLogout = () => {
     logout();
     navigate('/');
-    console.log("Sesión cerrada exitosamente");
   };
 
   return (

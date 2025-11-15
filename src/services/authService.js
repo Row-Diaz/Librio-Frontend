@@ -4,10 +4,7 @@ export const authService = {
   // POST /login - Iniciar sesión
   async login(credentials) {
     try {
-      console.log('📡 Enviando petición de login a:', '/login');
-      console.log('📡 Credenciales:', { email: credentials.email, password: '***' });
       const response = await api.post('/login', credentials);
-      console.log('📡 Respuesta del servidor:', response.data);
       const { token } = response.data;
       
       // Guardar token en localStorage
