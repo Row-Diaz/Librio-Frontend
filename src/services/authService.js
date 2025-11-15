@@ -130,21 +130,7 @@ export const authService = {
    */
   async actualizarFotoPerfil(foto_perfil) {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No hay sesión activa');
-      }
-
-      const response = await axios.put(
-        `${API_URL}/usuarios/foto-perfil`,
-        { foto_perfil },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+      const response = await api.put('/usuarios/foto-perfil', { foto_perfil });
 
       // Actualizar usuario en localStorage
       const user = this.getCurrentUserFromStorage();
