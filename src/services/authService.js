@@ -153,9 +153,12 @@ export const authService = {
 
       return { success: true, usuario: updatedUser };
     } catch (error) {
+      console.error('Error completo al actualizar foto:', error);
+      console.error('Respuesta del servidor:', error.response?.data);
+      console.error('Status:', error.response?.status);
       return {
         success: false,
-        error: error.response?.data?.error || 'Error al actualizar foto de perfil'
+        error: error.response?.data?.error || error.message || 'Error al actualizar foto de perfil'
       };
     }
   }
