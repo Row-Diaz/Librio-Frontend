@@ -29,10 +29,19 @@ const Carrito = () => {
 
     const handleCheckout = async () => {
     setIsProcessing(true);
-    
+
     try {
+      // Despertar el backend antes de crear el pedido
+      setCheckoutMessage('Preparando pedido...');
+      try {
+        await fetch('https://backup-librio-backend.onrender.com/health');
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 1 segundo adicional
+      } catch (e) {
+        console.log('Backend despertando...');
+      }
+
       const result = await pedidosService.crearPedido(cart);
-      
+
       if (result.success) {
         setCheckoutMessage("¡Compra realizada con éxito! Tu pedido ha sido registrado.");
         clearCart();
