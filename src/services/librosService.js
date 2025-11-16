@@ -1,16 +1,43 @@
 import { api } from './api';
 
-// Helper function para reintentar requests con delay
-const retryRequest = async (requestFn, retries = 2, delay = 2000) => {
+// Datos de respaldo si el backend falla
+const LIBROS_BACKUP = [];
+
+// Helper para despertar backend
+const wakeUpBackend = async () => {
   try {
-    return await requestFn();
-  } catch (error) {
-    if (retries > 0 && (error.code === 'ERR_NETWORK' || error.message === 'Network Error')) {
-      console.log(`Reintentando... (${retries} intentos restantes)`);
-      await new Promise(resolve => setTimeout(resolve, delay));
-      return retryRequest(requestFn, retries - 1, delay);
+    await fetch('https://backup-librio-backend.onrender.com/health', { method: 'GET', mode: 'cors' });
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+// Helper function para reintentar requests con delay
+const retryRequest = async (requestFn, retries = 2, delay = 3000) => {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await requestFn();
+    } catch (error) {
+      const isNetworkError = error.code === 'ERR_NETWORK' || 
+                            error.code === 'ERR_CONNECTION_RESET' ||
+                            error.message === 'Network Error';
+      
+      if (i < retries && isNetworkError) {
+        console.log(`í´„ Reintento ${i + 1}/${retries}...`);
+        
+        // Despertar backend en el primer reintento
+        if (i === 0) {
+          console.log('â³ Despertando backend...');
+          await wakeUpBackend();
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } else {
+        throw error;
+      }
     }
-    throw error;
   }
 };
 
@@ -19,8 +46,23 @@ export const librosService = {
   async getAllLibros() {
     try {
       const response = await retryRequest(() => api.get('/libros'));
+      
+      // Guardar en backup para futuras cargas
+      if (response.data && response.data.length > 0) {
+        localStorage.setItem('libros_backup', JSON.stringify(response.data));
+      }
+      
       return { success: true, libros: response.data };
     } catch (error) {
+      console.warn('Backend no disponible, usando datos locales');
+      
+      // Intentar cargar desde localStorage
+      const backup = localStorage.getItem('libros_backup');
+      if (backup) {
+        const libros = JSON.parse(backup);
+        return { success: true, libros, fromCache: true };
+      }
+      
       const message = error.response?.data?.message || 'Error al obtener libros';
       return { success: false, error: message };
     }
@@ -32,6 +74,16 @@ export const librosService = {
       const response = await retryRequest(() => api.get(`/libros/${id}`));
       return { success: true, libro: response.data };
     } catch (error) {
+      // Buscar en backup local
+      const backup = localStorage.getItem('libros_backup');
+      if (backup) {
+        const libros = JSON.parse(backup);
+        const libro = libros.find(l => l.id_libros === parseInt(id));
+        if (libro) {
+          return { success: true, libro, fromCache: true };
+        }
+      }
+      
       const message = error.response?.data?.message || 'Error al obtener el libro';
       return { success: false, error: message };
     }
