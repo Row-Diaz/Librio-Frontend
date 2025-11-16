@@ -2,8 +2,9 @@ import axios from 'axios';
 
 // Configuraci√≥n base de la API
 // Vite usa import.meta.env en lugar de process.env
-// const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://backlibreria-row.vercel.app';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://backup-librio-backend.onrender.com';
+
+console.log('Ì¥ó API URL configurada:', API_BASE_URL);
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -26,20 +27,16 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor para manejar respuestas y errores globalmente
+// Interceptor para manejar errores de autenticaci√≥n
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
-    // Si el token expir√≥ o no es v√°lido
     if (error.response?.status === 401) {
+      // Token expirado o inv√°lido
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      // Opcional: redirigir a login
       window.location.href = '/login';
     }
-    
     return Promise.reject(error);
   }
 );
