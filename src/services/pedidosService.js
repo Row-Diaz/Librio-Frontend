@@ -1,16 +1,42 @@
 import api from './api';
 
-// Helper function para reintentar requests con delay
-const retryRequest = async (requestFn, retries = 2, delay = 2000) => {
+// Despertar el backend con un health check
+const wakeUpBackend = async () => {
   try {
-    return await requestFn();
-  } catch (error) {
-    if (retries > 0 && (error.code === 'ERR_NETWORK' || error.message === 'Network Error')) {
-      console.log(`Reintentando... (${retries} intentos restantes)`);
-      await new Promise(resolve => setTimeout(resolve, delay));
-      return retryRequest(requestFn, retries - 1, delay);
+    await fetch('https://backup-librio-backend.onrender.com/health', { 
+      method: 'GET',
+      mode: 'cors'
+    });
+    console.log('âœ… Backend despierto');
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Esperar 2 segundos
+  } catch (e) {
+    console.log('â³ Backend despertando...');
+    await new Promise(resolve => setTimeout(resolve, 3000)); // Esperar 3 segundos si falla
+  }
+};
+
+// Helper function para reintentar requests con delay
+const retryRequest = async (requestFn, retries = 3, delay = 3000) => {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await requestFn();
+    } catch (error) {
+      const isNetworkError = error.code === 'ERR_NETWORK' || 
+                            error.code === 'ERR_CONNECTION_RESET' ||
+                            error.message === 'Network Error';
+      
+      if (i < retries && isNetworkError) {
+        console.log(`í´„ Reintento ${i + 1}/${retries}... esperando ${delay}ms`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        // Intentar despertar el backend antes de cada reintento
+        if (i === 0) {
+          await wakeUpBackend();
+        }
+      } else {
+        throw error;
+      }
     }
-    throw error;
   }
 };
 
@@ -20,6 +46,9 @@ export const pedidosService = {
    */
   async crearPedido(carrito) {
     try {
+      // Despertar el backend ANTES del primer intento
+      await wakeUpBackend();
+      
       // Enviar solo los datos esenciales (sin url_img base64)
       const carritoSimplificado = carrito.map(item => ({
         id: item.id,
